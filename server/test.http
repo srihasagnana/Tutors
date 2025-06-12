@@ -1,0 +1,102 @@
+# tutors
+### get req
+get http://localhost:7878/tutor-api/tutors  
+
+### get tutor by name
+get http://localhost:7878/tutor-api/tutor/RaviKumar
+
+### post req
+post http://localhost:7878/tutor-api/tutor
+Content-Type: application/json
+
+{
+  "tutorname": "RaviKumar",
+  "academyname": "Bright Minds Academy",
+  "address": "123 MG Road, Hyderabad, Telangana",
+  "mode": "both",
+  "phno": 9876543234,
+  "class": "1-10",
+  "password": "securePass123",
+  "feedback": [
+    {
+      "student": "Akhil Reddy",
+      "comment": "Very helpful and clear explanations",
+      "rating": 5
+    },
+    {
+      "student": "Divya Mehta",
+      "comment": "Great tutor for math!",
+      "rating": 4
+    }
+  ],
+  "payment": [
+    {
+      "student": "Akhil Reddy",
+      "amount": 5000,
+      "date": "2025-06-01"
+    }
+  ],
+  "schedule": {
+    "monday": "6 PM - 8 PM",
+    "wednesday": "5 PM - 7 PM",
+    "saturday": "4 PM - 6 PM"
+  },
+  "about": "Experienced Physics tutor with 10+ years in coaching JEE aspirants."
+}
+
+### put req
+put http://localhost:7878/tutor-api/tutorupdate/684a75e9bb54e54fac7d074a
+Content-Type: application/json
+
+{
+  "tutorname": "gnana",
+  "academyname": "academy",
+  "address": "nizambad opp to tirumala theather ",
+  "mode": "offline",
+  "phno": 6789098765,
+  "class": "9",
+  "password": "gnana",
+  "feedback": [
+  ],
+  "payment": [
+    
+  ],
+  "schedule": {
+    "day": "monday",
+    "time": "5 PM - 7 PM" ,
+    "subject": "maths"
+  },
+  "about":"No description provided"
+}
+
+### delete req
+delete http://localhost:7878/tutor-api/tutordelete/RaviKumar
+
+
+
+
+
+
+
+# students
+### get req
+get http://localhost:7878/student-api/students
+
+### get req by student
+get http://localhost:7878/student-api/student/Aarav Sharma
+
+
+### post req
+post http://localhost:7878/student-api/student
+Content-Type: application/json
+
+{
+  "studentname": "Aarav Sharma",
+  "class": "8th Grade",
+  "address": "Plot 45, Jubilee Hills, Hyderabad",
+  "mode": "online",
+  "tutorname": "Ravi Kumar",
+  "password": "studentSecure@123",
+  "trialStatus": true,
+  "joinDate": "2025-06-01T00:00:00.000Z"
+}
