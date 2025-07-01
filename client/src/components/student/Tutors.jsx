@@ -14,7 +14,7 @@ function Tutors() {
 
   async function handlerecommendedTutors(subject) {
   try {
-    const response = await axios.post("http://localhost:5000/recommend", {
+    const response = await axios.post("https://tutors-htxa.onrender.com/recommend", {
       subject: subject
     });
     setRecommendedTutors(response.data);
@@ -28,7 +28,7 @@ function Tutors() {
   useEffect(() => {
     async function fetchTutors() {
       try {
-        const response = await axios.get("http://localhost:7878/tutor-api/tutors");
+        const response = await axios.get("https://tutors-htxa.onrender.com/tutor-api/tutors");
         setTutors(response.data.payload);
       } catch (error) {
         console.error("Error fetching tutors:", error);

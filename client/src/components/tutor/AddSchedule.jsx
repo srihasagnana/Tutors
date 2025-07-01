@@ -18,7 +18,7 @@ function AddSchedule() {
 
     try {
       const response = await axios.put(
-        `http://localhost:7878/tutor-api/tutorupdate/${tutorId}`,
+        `https://tutors-htxa.onrender.com/tutor-api/tutorupdate/${tutorId}`,
         {
           schedule: {
             day: data.day,
