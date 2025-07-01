@@ -9,6 +9,7 @@ import Registert from './components/tutor/Register'
 import Logint from './components/tutor/Logint'
 import AddSchedule from './components/tutor/AddSchedule'
 import Aboutus from './components/tutor/Aboutus'
+import Tutors from './components/student/Tutors'
 
 function App() {
   const router=createBrowserRouter([
@@ -51,6 +52,10 @@ function App() {
         {
           path:'aboutus',
           element:<Aboutus />,
+        },
+        {
+          path:'tutors',
+          element:<Tutors />,
         },
       ]
     },

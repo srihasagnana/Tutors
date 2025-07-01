@@ -16,7 +16,7 @@ function handleLogin({ studentname, password }, navigate) {
       if (student && student.password === password) {
         setCurrentStudent(student);
         alert("Login successful");
-        navigate('/courses');
+        navigate('/tutors');
       } else {
         alert("Invalid password");
       }

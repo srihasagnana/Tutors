@@ -1,12 +1,27 @@
 const express=require('express')
 const TutorApp=express.Router()
 const Tutor=require('../models/tuterSchema')
+const axios = require('axios');
 
 // get details
 TutorApp.get('/tutors',async(req,res)=>{
     const details=await Tutor.find()
     res.send({message:"tutors are",payload:details})
 })
+// get courses (updated route)
+TutorApp.get('/tutor/recommend/:index', async (req, res) => {
+  const index = parseInt(req.params.index);
+  try {
+    const response = await axios.post("http://localhost:5000/recommend", {
+      courseId: index,
+    });
+    res.send({ message: "Recommended tutors", payload: response.data });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send({ message: "Flask server error" });
+  }
+});
+
 
 // get name by tutor
 TutorApp.get('/tutor/:tutorname',async(req,res)=>{

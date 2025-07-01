@@ -8,7 +8,7 @@ const TutorApp = require("./Apis/TutorApi");
 const studentApp = require("./Apis/StudentApi");
 app.use(cors())
 app.use(exp.json())
-const port=process.env.PORT || 7879
+const port=process.env.PORT || 5000
 
 mongoose.connect(process.env.DBURL)
 .then(()=>{

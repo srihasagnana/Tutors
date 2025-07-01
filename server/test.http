@@ -1,4 +1,8 @@
 # tutors
+
+### get courses
+GET http://localhost:7878/tutor-api/tutor/recommend/1
+
 ### get req
 get http://localhost:7878/tutor-api/tutors  
 
@@ -100,3 +104,5 @@ Content-Type: application/json
   "trialStatus": true,
   "joinDate": "2025-06-01T00:00:00.000Z"
 }
+
+

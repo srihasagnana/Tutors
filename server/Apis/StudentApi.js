@@ -8,6 +8,7 @@ studentApp.get('/students',async(req,res)=>{
     res.send({message:"get req of student",payload:studentDetails})
 })
 
+
 // get req by student name
 studentApp.get('/student/:studentname',async(req,res)=>{
     const StudentName=req.params.studentname
