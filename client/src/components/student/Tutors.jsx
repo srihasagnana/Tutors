@@ -14,7 +14,7 @@ function Tutors() {
 
   async function handlerecommendedTutors(subject) {
   try {
-    const response = await axios.post("https://tutors-htxa.onrender.com/recommend", {
+    const response = await axios.post("https://tutors-2.onrender.com/recommend", {
       subject: subject
     });
     setRecommendedTutors(response.data);
