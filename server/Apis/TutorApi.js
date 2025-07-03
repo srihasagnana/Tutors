@@ -9,11 +9,11 @@ TutorApp.get('/tutors',async(req,res)=>{
     res.send({message:"tutors are",payload:details})
 })
 // get courses (updated route)
-TutorApp.get('/tutor/recommend/:index', async (req, res) => {
-  const index = parseInt(req.params.index);
+TutorApp.get('/tutor/recommend/:subject', async (req, res) => {
+  const subject = req.params.subject;
   try {
-    const response = await axios.post("https://tutors-htxa.onrender.com/recommend", {
-      courseId: index,
+    const response = await axios.post("https://tutors-2.onrender.com/recommend", {
+      subject: subject,
     });
     res.send({ message: "Recommended tutors", payload: response.data });
   } catch (err) {
