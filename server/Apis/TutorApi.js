@@ -12,7 +12,7 @@ TutorApp.get('/tutors',async(req,res)=>{
 TutorApp.get('/tutor/recommend/:index', async (req, res) => {
   const index = parseInt(req.params.index);
   try {
-    const response = await axios.post("http://localhost:5000/recommend", {
+    const response = await axios.post("https://tutors-htxa.onrender.com/recommend", {
       courseId: index,
     });
     res.send({ message: "Recommended tutors", payload: response.data });
