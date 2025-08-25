@@ -10,6 +10,7 @@ import Logint from './components/tutor/Logint'
 import AddSchedule from './components/tutor/AddSchedule'
 import Aboutus from './components/tutor/Aboutus'
 import Tutors from './components/student/Tutors'
+import EnrollStudents from './components/tutor/EnrollStudents'
 
 function App() {
   const router=createBrowserRouter([
@@ -56,6 +57,10 @@ function App() {
         {
           path:'tutors',
           element:<Tutors />,
+        },
+        {
+          path:'enrolledstudents',
+          element:<EnrollStudents />,
         },
       ]
     },

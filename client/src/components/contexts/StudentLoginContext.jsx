@@ -8,7 +8,7 @@ function StudentLoginContext({ children }) {
 
 function handleLogin({ studentname, password }, navigate) {
   axios
-    .get(`https://tutors-htxa.onrender.com/student-api/student/${studentname}`)
+    .get(`http://localhost:7878/student-api/student/${studentname}`)
     .then((response) => {
       const student = response.data.payload; 
       console.log('Student data:', student);

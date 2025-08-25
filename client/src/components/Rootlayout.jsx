@@ -120,6 +120,17 @@ function Rootlayout() {
                       <span className="nav-link-hover">About Us</span>
                     </Link>
                   </li>
+                    <Link 
+                      className="nav-link fw-medium" 
+                      to="enrolledstudents" 
+                      style={{
+                        color: '#4e54c8',
+                        position: 'relative',
+                        padding: '0.5rem 1rem'
+                      }}>
+                      <i className="fa-solid fa-user-graduate me-2"></i> {/* Changed to student icon */}
+                      <span className="nav-link-hover">Enrolled Students</span>
+                    </Link>
                 </>
               )}
             </ul>

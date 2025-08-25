@@ -13,7 +13,7 @@ function Registers() {
     setIsSubmitting(true);
     
     try {
-      const response = await axios.post('https://tutors-htxa.onrender.com/student-api/student', data);
+      const response = await axios.post('http://localhost:7878/student-api/student', data);
       console.log(response.data);
       alert(`Registration successful, ${data.studentname}!`);
       navigate("/login");

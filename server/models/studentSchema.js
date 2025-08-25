@@ -1,5 +1,23 @@
-const mongoose=require('mongoose');
-const studentApp = require('../Apis/StudentApi');
+const mongoose = require('mongoose');
+
+const CourseSchema = new mongoose.Schema({
+  courseName: {
+    type: String,
+    required: true
+  },
+  tutorName: {
+    type: String,
+    required: true
+  },
+  trialStatus: {
+    type: Boolean,
+    default: false
+  },
+  joinDate: {
+    type: Date,
+    default: Date.now
+  }
+});
 
 const StudentSchema = new mongoose.Schema({
   studentname: {
@@ -16,25 +34,14 @@ const StudentSchema = new mongoose.Schema({
   },
   mode: {
     type: String,
-    enum: ['online', 'offline'], 
-    default: 'online' // or remove `required`
-  },
-  tutorname: {
-    type: String,
-    default: 'Not Assigned' // or remove `required`
+    enum: ['online', 'offline'],
+    default: 'online'
   },
   password: {
     type: String,
     required: true,
   },
-  trialStatus: {
-    type: Boolean,
-    default: true,
-  },
-  joinDate: {
-    type: Date,
-    default: Date.now,
-  },
+  courses: [CourseSchema], // <-- Array of course objects
 });
 
-module.exports=mongoose.model('Student',StudentSchema)
+module.exports = mongoose.model('Student', StudentSchema);

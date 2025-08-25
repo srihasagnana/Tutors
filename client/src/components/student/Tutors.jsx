@@ -1,34 +1,71 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Modal, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Modal, Button, Badge } from "react-bootstrap";
+import { useContext } from "react";
+import { StudentLoginContextObj } from "../contexts/StudentLoginContext";
+import {
+  FaChalkboardTeacher,
+  FaMapMarkerAlt,
+  FaBuilding,
+  FaClock,
+  FaBook,
+  FaPhone,
+  FaUserTie,
+  FaInfoCircle,
+  FaPlus,
+} from "react-icons/fa";
 
 function Tutors() {
   const [tutors, setTutors] = useState([]);
   const [selectedTutor, setSelectedTutor] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedMode, setSelectedMode] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [recommendedTutors, setRecommendedTutors]=useState([])
+  const [recommendedTutors, setRecommendedTutors] = useState([]);
+  const { currentStudent } = useContext(StudentLoginContextObj);
 
   async function handlerecommendedTutors(subject) {
-  try {
-    const response = await axios.post("https://tutors-2.onrender.com/recommend", {
-      subject: subject
-    });
-    setRecommendedTutors(response.data);
-  } catch (error) {
-    console.error("Error fetching recommended tutors:", error);
-    setRecommendedTutors([]); // fallback
+    try {
+      const response = await axios.post("http://localhost:5000/recommend", {
+        subject: subject,
+      });
+      setRecommendedTutors(response.data);
+    } catch (error) {
+      console.error("Error fetching recommended tutors:", error);
+      setRecommendedTutors([]);
+    }
   }
-}
 
+  async function handleTrial(data) {
+    try {
+      await axios.put(
+        `http://localhost:7878/student-api/student/update/${currentStudent._id}`,
+        {
+          tutorname: data.tutorname,
+          trialStatus: true,
+        }
+      );
+
+      await axios.put(
+        `http://localhost:7878/tutor-api/tutorupdate/${data._id}`,
+        {
+          joinedStudents: [currentStudent._id],
+        }
+      );
+
+      alert("Successfully joined the course!");
+    } catch (error) {
+      console.error("Error joining course:", error);
+      alert("Failed to join course. Please try again.");
+    }
+  }
 
   useEffect(() => {
     async function fetchTutors() {
       try {
-        const response = await axios.get("https://tutors-htxa.onrender.com/tutor-api/tutors");
+        const response = await axios.get(
+          "http://localhost:7878/tutor-api/tutors"
+        );
         setTutors(response.data.payload);
       } catch (error) {
         console.error("Error fetching tutors:", error);
@@ -43,9 +80,8 @@ function Tutors() {
     setShowModal(true);
 
     if (tutor?.schedule?.subject) {
-  handlerecommendedTutors(tutor.schedule.subject);
-}
-
+      handlerecommendedTutors(tutor.schedule.subject);
+    }
   };
 
   const handleCloseModal = () => {
@@ -53,24 +89,17 @@ function Tutors() {
     setSelectedTutor(null);
   };
 
-  // Filter by mode + subject/address
   const filteredTutors = tutors.filter((tutor) => {
     const mode = tutor.mode?.toLowerCase() || "";
-    const subject = tutor.schedule?.subject?.toLowerCase() || "";
-    const address = tutor.address?.toLowerCase() || "";
-    const search = searchTerm.toLowerCase();
-
     const matchesMode =
       selectedMode === "all" || mode === selectedMode || mode === "both";
-    const matchesSubject = subject.includes(search);
-    const matchesAddress = address.includes(search);
-
-    return matchesMode && (searchTerm.trim() === "" || matchesSubject || matchesAddress);
+    return matchesMode;
   });
 
   return (
     <div className="container my-4">
       <h1 className="text-center mb-4" style={{ color: "#2c3e50", fontWeight: "bold" }}>
+        <FaChalkboardTeacher className="me-2" />
         Our Expert Tutors
       </h1>
 
@@ -98,16 +127,6 @@ function Tutors() {
             </button>
           </div>
         </div>
-
-        <div className="col-md-6">
-          <input
-            type="text"
-            placeholder="Search by subject or address"
-            className="form-control"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
       </div>
 
       {/* Tutors List */}
@@ -119,36 +138,57 @@ function Tutors() {
         <div className="row">
           {filteredTutors.map((tutor) => (
             <div className="col-md-4 mb-4" key={tutor.tutorid}>
-              <div
-                className="card h-100 shadow-sm border-0 hover-shadow transition"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleTutorClick(tutor)}
-              >
-                <div className="card-body">
+              <div className="card h-100 shadow-sm border-0">
+                <div className="card-body d-flex flex-column">
                   <div className="d-flex justify-content-between align-items-start mb-3">
                     <h5 className="card-title mb-0" style={{ color: "#3498db" }}>
+                      <FaUserTie className="me-2" />
                       {tutor.tutorname}
                     </h5>
-                    <span className="badge bg-primary">class: {tutor.class}</span>
+                    <Badge bg="primary" className="align-self-center">
+                      Class: {tutor.class}
+                    </Badge>
                   </div>
-                  <h6 className="card-subtitle mb-2 text-muted">
-                    <i className="bi bi-building me-2"></i>
-                    {tutor.academyname}
-                  </h6>
-                  <p className="card-text text-truncate">
-                    <i className="bi bi-geo-alt-fill me-2 text-danger"></i>
-                    {tutor.address}
-                  </p>
-                  <button
-                    className="btn btn-sm btn-outline-primary mt-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleTutorClick(tutor);
-                    }}
-                  >
-                    View Details
-                  </button>
-                  
+
+                  <div className="mb-2">
+                    <FaBuilding className="me-2 text-muted" />
+                    <span className="text-muted">{tutor.academyname}</span>
+                  </div>
+
+                  <div className="mb-2">
+                    <FaMapMarkerAlt className="me-2 text-danger" />
+                    <small className="text-truncate">{tutor.address}</small>
+                  </div>
+
+                  {tutor.schedule && (
+                    <div className="mb-3">
+                      <FaBook className="me-2 text-info" />
+                      <span>{tutor.schedule.subject}</span>
+                    </div>
+                  )}
+
+                  <div className="mt-auto d-flex justify-content-between align-items-center">
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => handleTutorClick(tutor)}
+                    >
+                      View Details
+                    </Button>
+
+                    <Button
+                      variant="success"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleTrial(tutor);
+                      }}
+                      className="d-flex align-items-center"
+                    >
+                      <FaPlus className="me-1" />
+                      Join Course
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -162,37 +202,38 @@ function Tutors() {
           <>
             <Modal.Header closeButton className="bg-light">
               <Modal.Title style={{ color: "#2c3e50" }}>
+                <FaChalkboardTeacher className="me-2" />
                 {selectedTutor.tutorname}'s Profile
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <div className="mb-3">
-                <h5 className="text-primary">{selectedTutor.tutorname}</h5>
-                <h6 className="text-muted">
-                  <i className="bi bi-building me-2"></i>
-                  {selectedTutor.academyname}
-                </h6>
-              </div>
-
               <div className="row">
-                <div className="col-md-6">
-                  <p>
-                    <strong><i className="bi bi-telephone-fill me-2 text-success"></i>Contact:</strong> {selectedTutor.phno}
-                  </p>
-                  <p>
-                    <strong><i className="bi bi-book me-2 text-info"></i>Class:</strong> {selectedTutor.class}
-                  </p>
-                  <p>
-                    <strong><i className="bi bi-clock-history me-2 text-warning"></i>Experience:</strong> {selectedTutor.experience} years
-                  </p>
-                </div>
-                <div className="col-md-6">
-                  <p>
-                    <strong><i className="bi bi-geo-alt-fill me-2 text-danger"></i>Address:</strong> {selectedTutor.address}
-                  </p>
-                  <p>
-                    <strong><i className="bi bi-laptop me-2 text-secondary"></i>Mode:</strong> {selectedTutor.mode}
-                  </p>
+                <div className="col-md-8">
+                  <div className="mb-3">
+                    <h4 className="text-primary">{selectedTutor.tutorname}</h4>
+                    <h6 className="text-muted">
+                      <FaBuilding className="me-2" />
+                      {selectedTutor.academyname}
+                    </h6>
+                  </div>
+
+                  <div className="mb-3">
+                    <p>
+                      <strong><FaPhone className="me-2 text-success" />Contact:</strong> {selectedTutor.phno}
+                    </p>
+                    <p>
+                      <strong><FaBook className="me-2 text-info" />Class:</strong> {selectedTutor.class}
+                    </p>
+                    <p>
+                      <strong><FaClock className="me-2 text-warning" />Experience:</strong> {selectedTutor.experience} years
+                    </p>
+                    <p>
+                      <strong><FaMapMarkerAlt className="me-2 text-danger" />Address:</strong> {selectedTutor.address}
+                    </p>
+                    <p>
+                      <strong><FaInfoCircle className="me-2 text-secondary" />Mode:</strong> {selectedTutor.mode}
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -218,25 +259,60 @@ function Tutors() {
                 <p>{selectedTutor.about}</p>
               </div>
 
-              <div className="mt-3">
-                {recommendedTutors.length > 0 && (
-                  <div className="mt-3">
-                    <h6 className="text-primary">Recommended Tutors</h6>
-                    <ul className="list-group">
-                      {recommendedTutors.map((tutor, idx) => (
-                        <li key={idx} className="list-group-item">
-                          <strong>{tutor.tutorname}</strong> - {tutor.academyname}<br />
-                          <em>{tutor.schedule?.subject}</em>
-                        </li>
-                      ))}
-                    </ul>
+              {recommendedTutors.length > 0 && (
+                <div className="mt-4">
+                  <h6 className="text-primary">Recommended Tutors</h6>
+                  <div className="row">
+                    {recommendedTutors.map((tutor, idx) => (
+                      <div key={idx} className="col-md-6 mb-3">
+                        <div className="card h-100">
+                          <div className="card-body">
+                            <h6 className="card-title">
+                              <FaUserTie className="me-2" />
+                              {tutor.tutorname}
+                            </h6>
+                            <p className="card-text">
+                              <FaBuilding className="me-2" />
+                              {tutor.academyname}
+                            </p>
+                            {tutor.schedule?.subject && (
+                              <Badge bg="info" className="mb-2">
+                                <FaBook className="me-1" />
+                                {tutor.schedule.subject}
+                              </Badge>
+                            )}
+                            <Button
+                              variant="outline-primary"
+                              size="sm"
+                              className="mt-2"
+                              onClick={() => {
+                                setSelectedTutor(tutor);
+                                handlerecommendedTutors(tutor.schedule?.subject);
+                              }}
+                            >
+                              View Details
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleCloseModal}>
                 Close
+              </Button>
+              <Button
+                variant="success"
+                onClick={() => {
+                  handleTrial(selectedTutor);
+                  handleCloseModal();
+                }}
+              >
+                <FaPlus className="me-1" />
+                Join Course
               </Button>
             </Modal.Footer>
           </>

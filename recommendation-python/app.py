@@ -7,7 +7,7 @@ from pymongo import MongoClient
 app = Flask(__name__)
 CORS(app)
 
-client = MongoClient("mongodb+srv://gnanasrihasa:siri@cluster0.oms6gyi.mongodb.net/tutions?retryWrites=true&w=majority&appName=Cluster0")
+client = MongoClient("mongodb://127.0.0.1:27017/")
 db = client["tutions"]
 tutor_collection = db["tuters"]
 

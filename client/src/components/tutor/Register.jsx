@@ -15,7 +15,7 @@ function Registert() {
     setSubmittedName(data.tutorname);
     
     try {
-      const response = await axios.post('https://tutors-htxa.onrender.com/tutor-api/tutor', data);
+      const response = await axios.post('http://localhost:7878/tutor-api/tutor', data);
       console.log(response.data);
       alert(`Registration successful, ${data.tutorname}!`);
       navigate("/logint");

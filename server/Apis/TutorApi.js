@@ -12,7 +12,7 @@ TutorApp.get('/tutors',async(req,res)=>{
 TutorApp.get('/tutor/recommend/:subject', async (req, res) => {
   const subject = req.params.subject;
   try {
-    const response = await axios.post("https://tutors-2.onrender.com/recommend", {
+    const response = await axios.post("http://localhost:7878/recommend", {
       subject: subject,
     });
     res.send({ message: "Recommended tutors", payload: response.data });
@@ -41,18 +41,21 @@ TutorApp.post('/tutor',async(req,res)=>{
     res.send({message:"tutor added",payload:tutorobj})
 })
 
-// update req
-TutorApp.put('/tutorupdate/:_id', async (req, res) => {
-  const _id = req.params._id; 
-  const updatedData = req.body;
+// put req
+TutorApp.put('/tutorupdate/:_id',async(req,res)=>{
+  const tutorId=req.params._id
+  const details=req.body.joinedStudents
+  const updatedDetails=await Tutor.findByIdAndUpdate(tutorId,{$addToSet:{joinedStudents:{$each:details}}},{new:true})
+  res.send({message:"tutor updated..",payload:updatedDetails})
+})
 
-  try {
-    const updatedTutor = await Tutor.findByIdAndUpdate(_id, updatedData, { new: true });
-    res.send({ message: "Tutor updated successfully", payload: updatedTutor });
-  } catch (err) {
-    res.status(500).send({ message: "Error updating tutor", error: err.message });
-  }
-});
+// get the student details
+TutorApp.get('/student_tutor/:_id',async(req,res)=>{
+  const details=req.params._id
+  const studentDetails=await Tutor.findById(details).populate('joinedStudents')
+  res.send({message:"students joined in the course are :",payload:studentDetails})
+})
+
 
 // delete req
 TutorApp.delete('/tutordelete/:tutorname',async(req,res)=>{

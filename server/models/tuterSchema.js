@@ -51,6 +51,11 @@ const TuterSchema = new mongoose.Schema({
     verified: {
         type: Boolean,
         default: false // added for admin verification
-    }
+    },
+    joinedStudents: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Student',
+        default: []
+    }]
 });
 module.exports=mongoose.model('Tuter',TuterSchema)
